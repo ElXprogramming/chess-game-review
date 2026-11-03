@@ -3,7 +3,6 @@ import confetti from 'canvas-confetti';
 import { GameReview, MoveReview, ReviewProgress } from './types/chess';
 import { parsePgn } from './utils/pgnParser';
 import { reviewGame } from './engine/reviewEngine';
-import { SAMPLE_GAMES } from './utils/sampleGames';
 import { soundPlayer } from './utils/soundPlayer';
 import { exportAnnotatedPgn, downloadTextFile } from './utils/exportPgn';
 
@@ -17,7 +16,7 @@ import { MoveList } from './components/MoveList';
 import { PgnInputModal } from './components/PgnInputModal';
 import { ReviewProgressBar } from './components/ReviewProgressBar';
 
-import { Play, Pause, SkipBack, SkipForward, ChevronLeft, ChevronRight, BarChart2, LayoutDashboard } from 'lucide-react';
+import { Play, Pause, SkipBack, SkipForward, ChevronLeft, ChevronRight, BarChart2, LayoutDashboard, FileText, PlusCircle } from 'lucide-react';
 
 export const App: React.FC = () => {
   const [review, setReview] = useState<GameReview | null>(null);
@@ -38,12 +37,6 @@ export const App: React.FC = () => {
   useEffect(() => {
     soundPlayer.enabled = soundEnabled;
   }, [soundEnabled]);
-
-  // Initial load: Start with the legendary Byrne vs Fischer Game of the Century
-  useEffect(() => {
-    const defaultSample = SAMPLE_GAMES[0];
-    handleStartReview(defaultSample.pgn, 12);
-  }, []);
 
   const handleStartReview = async (pgnString: string, depth = 14) => {
     try {
@@ -340,6 +333,28 @@ export const App: React.FC = () => {
               activeTab === 'review' ? 'hidden sm:flex' : 'flex'
             }`}
           >
+            {/* Empty State when no game has been reviewed yet */}
+            {!review && (
+              <div className="bg-[#1e2024] border border-gray-800 rounded-xl p-6 sm:p-8 text-center flex flex-col items-center justify-center gap-4 shadow-xl">
+                <div className="w-16 h-16 rounded-2xl bg-chess-accent/15 border border-chess-accent/30 flex items-center justify-center text-chess-accent">
+                  <FileText className="w-8 h-8" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white mb-1">Analyze Any Chess Game</h3>
+                  <p className="text-xs text-gray-400 max-w-sm">
+                    Paste your Portable Game Notation (PGN) or upload a game file to get instant move-by-move Stockfish analysis, accuracy percentage, and Grandmaster coach insights.
+                  </p>
+                </div>
+                <button
+                  onClick={() => setIsPgnModalOpen(true)}
+                  className="mt-2 flex items-center gap-2 px-6 py-2.5 rounded-xl bg-chess-accent hover:bg-chess-accentHover text-white text-sm font-bold shadow-lg shadow-chess-accent/25 transition-all hover:scale-105"
+                >
+                  <PlusCircle className="w-4 h-4" />
+                  <span>Paste PGN to Review</span>
+                </button>
+              </div>
+            )}
+
             {/* Accuracy Breakdown Card */}
             {review && <AccuracySummary review={review} />}
 

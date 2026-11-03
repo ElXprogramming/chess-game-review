@@ -60,12 +60,8 @@ Every move is classified using win probability curves ($\Delta W$):
 - **Customizable Themes**: Classic Olive, Wood, Midnight Slate, Charcoal, and Emerald.
 
 ### 6. PGN Parsing & Export
-- **Flexible PGN Input**: Paste raw PGN text or drag-and-drop `.pgn` files.
-- **Pre-Loaded Famous Games**:
-  - *Donald Byrne vs Bobby Fischer (1956)* - "Game of the Century" (`17... Be6!!`)
-  - *Paul Morphy vs Duke & Count (1858)* - "The Opera Game" (`16. Qb8+!!`)
-  - *Garry Kasparov vs Veselin Topalov (1999)* - "Kasparov's Immortal" (`24. Rxd4!!`)
-  - *Club Championship Tactical Drama* - Sharp tactical duel with blunders & tactical turnarounds
+- **Instant User PGN Input**: Paste raw PGN text or drag-and-drop `.pgn` files with instant client-side move validation.
+- **Zero Wait**: Directly analyze your own games immediately without pre-running background demo games.
 - **Annotated PGN Export**: Export reviewed games with standard Numeric Annotation Glyphs (NAGs: `$1`, `$2`, `$3`, `$4`), evaluation tags `[%eval ...]`, and coach notes.
 
 ---

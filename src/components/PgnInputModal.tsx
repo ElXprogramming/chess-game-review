@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { SAMPLE_GAMES, SampleGame } from '../utils/sampleGames';
 import { parsePgn } from '../utils/pgnParser';
 import { Upload, FileText, Sparkles, X, Play, AlertCircle } from 'lucide-react';
 
@@ -16,7 +15,7 @@ export const PgnInputModal: React.FC<PgnInputModalProps> = ({
   onSubmitPgn,
   initialDepth = 14,
 }) => {
-  const [tab, setTab] = useState<'paste' | 'upload' | 'samples'>('paste');
+  const [tab, setTab] = useState<'paste' | 'upload'>('paste');
   const [pgnText, setPgnText] = useState('');
   const [selectedDepth, setSelectedDepth] = useState<number>(initialDepth);
   const [error, setError] = useState<string | null>(null);
@@ -53,11 +52,6 @@ export const PgnInputModal: React.FC<PgnInputModalProps> = ({
       }
     };
     reader.readAsText(file);
-  };
-
-  const handleSelectSample = (sample: SampleGame) => {
-    setPgnText(sample.pgn);
-    handleValidateAndSubmit(sample.pgn);
   };
 
   return (
@@ -106,17 +100,6 @@ export const PgnInputModal: React.FC<PgnInputModalProps> = ({
             <Upload className="w-3.5 h-3.5" />
             <span>Upload File</span>
           </button>
-          <button
-            onClick={() => setTab('samples')}
-            className={`pb-2.5 px-3 border-b-2 transition-colors flex items-center gap-1.5 ${
-              tab === 'samples'
-                ? 'border-chess-accent text-chess-accent'
-                : 'border-transparent text-gray-400 hover:text-gray-200'
-            }`}
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Sample Games</span>
-          </button>
         </div>
 
         {/* Modal Body */}
@@ -164,29 +147,6 @@ export const PgnInputModal: React.FC<PgnInputModalProps> = ({
                   className="hidden"
                 />
               </label>
-            </div>
-          )}
-
-          {tab === 'samples' && (
-            <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
-              {SAMPLE_GAMES.map((sample) => (
-                <div
-                  key={sample.id}
-                  onClick={() => handleSelectSample(sample)}
-                  className="p-3 rounded-xl bg-[#16171a] hover:bg-[#25272e] border border-gray-800 hover:border-chess-accent/50 cursor-pointer transition-all flex items-center justify-between group"
-                >
-                  <div>
-                    <h4 className="font-bold text-white text-xs sm:text-sm group-hover:text-chess-accent transition-colors">
-                      {sample.title}
-                    </h4>
-                    <p className="text-[11px] text-gray-400 mt-0.5">{sample.subtitle}</p>
-                    <span className="text-[10px] font-mono text-gray-500 mt-1 inline-block">
-                      {sample.white} vs {sample.black} ({sample.result})
-                    </span>
-                  </div>
-                  <Play className="w-4 h-4 text-gray-400 group-hover:text-chess-accent transition-colors shrink-0" />
-                </div>
-              ))}
             </div>
           )}
 
