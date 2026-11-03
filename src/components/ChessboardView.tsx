@@ -102,13 +102,31 @@ export const ChessboardView: React.FC<ChessboardViewProps> = ({
 
   const theme = THEME_COLORS[boardTheme] || THEME_COLORS.classic;
 
+  // Helper to trim arrows so they don't cover the piece centers
+  const shortenVector = (from: { x: number; y: number }, to: { x: number; y: number }, trimStart = 2, trimEnd = 3.2) => {
+    const dx = to.x - from.x;
+    const dy = to.y - from.y;
+    const len = Math.hypot(dx, dy);
+    if (len < 5) return { from, to };
+    return {
+      from: {
+        x: from.x + (dx / len) * trimStart,
+        y: from.y + (dy / len) * trimStart,
+      },
+      to: {
+        x: to.x - (dx / len) * trimEnd,
+        y: to.y - (dy / len) * trimEnd,
+      },
+    };
+  };
+
   // Arrow calculations
   const playedArrow = React.useMemo(() => {
     if (!activeReview || !activeReview.from || !activeReview.to) return null;
     const fromCoord = getSquareCoordinates(activeReview.from);
     const toCoord = getSquareCoordinates(activeReview.to);
     if (!fromCoord || !toCoord) return null;
-    return { from: fromCoord, to: toCoord };
+    return shortenVector(fromCoord, toCoord);
   }, [activeReview, orientation]);
 
   const bestMoveArrow = React.useMemo(() => {
@@ -122,7 +140,7 @@ export const ChessboardView: React.FC<ChessboardViewProps> = ({
     const fromCoord = getSquareCoordinates(fromSquare);
     const toCoord = getSquareCoordinates(toSquare);
     if (!fromCoord || !toCoord) return null;
-    return { from: fromCoord, to: toCoord };
+    return shortenVector(fromCoord, toCoord);
   }, [activeReview, showBestMoveArrow, orientation]);
 
   // King check highlight
@@ -237,26 +255,26 @@ export const ChessboardView: React.FC<ChessboardViewProps> = ({
           {/* Arrow marker for engine recommendation */}
           <marker
             id="arrow-best"
-            viewBox="0 0 10 10"
-            refX="6"
-            refY="5"
-            markerWidth="4"
-            markerHeight="4"
+            viewBox="0 0 6 6"
+            refX="4.5"
+            refY="3"
+            markerWidth="2.8"
+            markerHeight="2.8"
             orient="auto-start-reverse"
           >
-            <path d="M 0 1 L 10 5 L 0 9 z" fill="#10b981" />
+            <path d="M 0 0.8 L 4.5 3 L 0 5.2 z" fill="#10b981" fillOpacity="0.5" />
           </marker>
           {/* Arrow marker for played move */}
           <marker
             id="arrow-played"
-            viewBox="0 0 10 10"
-            refX="6"
-            refY="5"
-            markerWidth="4"
-            markerHeight="4"
+            viewBox="0 0 6 6"
+            refX="4.5"
+            refY="3"
+            markerWidth="2.8"
+            markerHeight="2.8"
             orient="auto-start-reverse"
           >
-            <path d="M 0 1 L 10 5 L 0 9 z" fill="#f59e0b" />
+            <path d="M 0 0.8 L 4.5 3 L 0 5.2 z" fill="#f59e0b" fillOpacity="0.45" />
           </marker>
         </defs>
 
@@ -268,8 +286,8 @@ export const ChessboardView: React.FC<ChessboardViewProps> = ({
             x2={playedArrow.to.x}
             y2={playedArrow.to.y}
             stroke="#f59e0b"
-            strokeWidth="2.5"
-            strokeOpacity="0.75"
+            strokeWidth="1.4"
+            strokeOpacity="0.4"
             strokeLinecap="round"
             markerEnd="url(#arrow-played)"
           />
@@ -283,9 +301,9 @@ export const ChessboardView: React.FC<ChessboardViewProps> = ({
             x2={bestMoveArrow.to.x}
             y2={bestMoveArrow.to.y}
             stroke="#10b981"
-            strokeWidth="2.5"
-            strokeDasharray="3,2"
-            strokeOpacity="0.85"
+            strokeWidth="1.4"
+            strokeDasharray="2.5,2"
+            strokeOpacity="0.45"
             strokeLinecap="round"
             markerEnd="url(#arrow-best)"
           />

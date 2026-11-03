@@ -35,13 +35,21 @@ export const MoveList: React.FC<MoveListProps> = ({
     return turns;
   }, [moves]);
 
-  // Auto scroll to active move
+  // Auto scroll within the move list container ONLY (prevents window scrolling)
   useEffect(() => {
     if (activeRowRef.current && containerRef.current) {
-      activeRowRef.current.scrollIntoView({
-        behavior: 'smooth',
-        block: 'nearest',
-      });
+      const container = containerRef.current;
+      const row = activeRowRef.current;
+      const rowTop = row.offsetTop;
+      const rowBottom = rowTop + row.clientHeight;
+      const containerTop = container.scrollTop;
+      const containerBottom = containerTop + container.clientHeight;
+
+      if (rowTop < containerTop) {
+        container.scrollTo({ top: rowTop - 10, behavior: 'smooth' });
+      } else if (rowBottom > containerBottom) {
+        container.scrollTo({ top: rowBottom - container.clientHeight + 10, behavior: 'smooth' });
+      }
     }
   }, [currentMoveIndex]);
 
