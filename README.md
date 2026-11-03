@@ -1,4 +1,4 @@
-# Grandmaster Review ♟️⚡
+# ChessGameReview ♟️⚡
 ### The Ultimate In-Browser Chess Engine & Game Review Web Application
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](LICENSE)
@@ -6,7 +6,7 @@
 [![CAPS2: Accuracy Engine](https://img.shields.io/badge/Accuracy-CAPS2%20Model-blue.svg)](#)
 [![Client-Side: 100% Zero-Server](https://img.shields.io/badge/Privacy-100%25%20In--Browser-purple.svg)](#)
 
-**Grandmaster Review** is a high-performance, browser-native chess engine and full game review web application. It runs **Stockfish (WebAssembly / asm.js)** directly inside browser Web Workers with zero server dependencies, evaluating any PGN (Portable Game Notation) game in seconds, calculating **CAPS2 accuracy percentages**, classifying every move with badges, providing natural language virtual coach commentary, and displaying an interactive evaluation advantage chart.
+**ChessGameReview** is a high-performance, browser-native chess engine and full game review web application. It runs **Stockfish (WebAssembly / asm.js)** directly inside browser Web Workers with zero server dependencies, evaluating any PGN (Portable Game Notation) game in seconds, calculating **CAPS2 accuracy percentages**, classifying every move with badges, providing natural language virtual coach commentary, and displaying an interactive evaluation advantage chart.
 
 ---
 
@@ -18,7 +18,7 @@
 - **Configurable Search Depth**:
   - **Fast Review (Depth 12)**: Ultra-rapid ~5s complete game analysis.
   - **Balanced Review (Depth 14)**: Great balance of precision and speed (~15s).
-  - **Deep Grandmaster Review (Depth 18)**: Master-level tactical precision (~35s).
+  - **Deep Review (Depth 18)**: Master-level tactical precision (~35s).
 - **Graceful Fallback**: Automatically loads `stockfish.wasm.js` when WebAssembly is supported, falling back to pure JavaScript `stockfish.js` on legacy devices.
 
 ### 2. Move Classification Badges (Chess.com / Lichess Standard)

@@ -20,7 +20,7 @@ const NAG_MAP: Record<MoveClassification, string> = {
 export function exportAnnotatedPgn(review: GameReview): string {
   const headers = [
     `[Event "${review.meta.event || 'Chess Game Review'}"]`,
-    `[Site "${review.meta.site || 'Grandmaster Review'}"]`,
+    `[Site "${review.meta.site || 'ChessGameReview'}"]`,
     `[Date "${review.meta.date || new Date().toISOString().split('T')[0]}"]`,
     `[White "${review.meta.white || 'White'}"]`,
     `[Black "${review.meta.black || 'Black'}"]`,
