@@ -64,6 +64,20 @@ Every move is classified using win probability curves ($\Delta W$):
 - **Zero Wait**: Directly analyze your own games immediately without pre-running background demo games.
 - **Annotated PGN Export**: Export reviewed games with standard Numeric Annotation Glyphs (NAGs: `$1`, `$2`, `$3`, `$4`), evaluation tags `[%eval ...]`, and coach notes.
 
+### 7. Unlimited Tactical Puzzle Generator 🧩⚡
+- **Infinite Tactical Puzzles**: Integrated with the open-access Lichess Tactical Puzzle Database (>4,000,000+ verified puzzles) with background pre-fetching for instant next-puzzle transitions.
+- **Offline Curated Backup Bank**: Bundles verified tactical puzzles locally so training continues seamlessly even when offline or without internet.
+- **Difficulty Filters**: Target specific rating ranges:
+  - Any / Random
+  - Beginner (<1250 Elo)
+  - Intermediate (1250–1700 Elo)
+  - Advanced (1700–2100 Elo)
+  - Master (2100+ Elo)
+- **Theme Filtering**: Filter tactics by Mate in 1, Mate in 2, Mate in 3, Fork / Double Attack, Pin & Skewer, Hanging Pieces, Deflection, and Endgame tactics.
+- **Interactive Gameplay**: Automatic opponent replies, progressive hint system (piece highlight -> move arrow), step-by-step solution player, and instant retry.
+- **Stockfish Live Analysis Integration**: One-click live engine evaluation and multi-PV lines directly on any puzzle position.
+- **Session Stats & Streaks**: Tracks current streak (🔥), best streak (🏆), total solved, and accuracy percentage persisted across browser sessions.
+
 ---
 
 ## 🚀 Getting Started

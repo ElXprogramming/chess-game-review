@@ -18,6 +18,7 @@ import { EvalChart } from './components/EvalChart';
 import { MoveList } from './components/MoveList';
 import { PgnInputModal } from './components/PgnInputModal';
 import { ReviewProgressBar } from './components/ReviewProgressBar';
+import { PuzzleGeneratorView } from './components/PuzzleGeneratorView';
 
 import {
   Play,
@@ -60,6 +61,7 @@ export const App: React.FC = () => {
   const [boardTheme, setBoardTheme] = useState<'classic' | 'wood' | 'midnight' | 'charcoal' | 'emerald'>('classic');
   const [isPlaying, setIsPlaying] = useState(false);
   const [activeTab, setActiveTab] = useState<'review' | 'report'>('review');
+  const [appMode, setAppMode] = useState<'review' | 'puzzles'>('review');
 
   // Live Engine state
   const [liveEngineEnabled, setLiveEngineEnabled] = useState<boolean>(true);
@@ -190,7 +192,7 @@ export const App: React.FC = () => {
 
   // Start live engine evaluation when board FEN changes
   useEffect(() => {
-    if (!liveEngineEnabled || isAnalyzing) {
+    if (!liveEngineEnabled || isAnalyzing || appMode === 'puzzles') {
       liveEngineInstance.stop();
       return;
     }
@@ -206,7 +208,7 @@ export const App: React.FC = () => {
     return () => {
       liveEngineInstance.stop();
     };
-  }, [currentFen, liveEngineEnabled, liveEngineMultiPv, isAnalyzing]);
+  }, [currentFen, liveEngineEnabled, liveEngineMultiPv, isAnalyzing, appMode]);
 
   // Handle move making by user (click or drag-and-drop)
   const handleUserMove = useCallback(
@@ -525,7 +527,12 @@ export const App: React.FC = () => {
     <div className="min-h-screen bg-[#121316] text-gray-100 flex flex-col font-sans">
       {/* Top Navigation */}
       <Navbar
-        onOpenPgnModal={() => setIsPgnModalOpen(true)}
+        activeMode={appMode}
+        onSelectMode={setAppMode}
+        onOpenPgnModal={() => {
+          setAppMode('review');
+          setIsPgnModalOpen(true);
+        }}
         onFlipBoard={() => setOrientation(orientation === 'white' ? 'black' : 'white')}
         soundEnabled={soundEnabled}
         onToggleSound={() => setSoundEnabled(!soundEnabled)}
@@ -536,25 +543,32 @@ export const App: React.FC = () => {
         hasGame={Boolean(review)}
       />
 
-      {/* Main Review Dashboard */}
+      {/* Main Review or Puzzle Dashboard */}
       <main className="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-5 lg:p-6 flex flex-col gap-5">
-        {/* Mobile View Switcher */}
-        <div className="flex sm:hidden border-b border-gray-800 pb-2 gap-2 text-xs font-semibold">
-          <button
-            onClick={() => setActiveTab('review')}
-            className={`flex-1 py-1.5 rounded-lg flex items-center justify-center gap-1.5 transition-colors ${
-              activeTab === 'review' ? 'bg-chess-accent text-white' : 'bg-[#1e2024] text-gray-400'
-            }`}
-          >
-            <LayoutDashboard className="w-3.5 h-3.5" />
-            <span>Board & Engine</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('report')}
-            className={`flex-1 py-1.5 rounded-lg flex items-center justify-center gap-1.5 transition-colors ${
-              activeTab === 'report' ? 'bg-chess-accent text-white' : 'bg-[#1e2024] text-gray-400'
-            }`}
-          >
+        {appMode === 'puzzles' ? (
+          <PuzzleGeneratorView
+            boardTheme={boardTheme}
+            soundEnabled={soundEnabled}
+          />
+        ) : (
+          <>
+            {/* Mobile View Switcher */}
+            <div className="flex sm:hidden border-b border-gray-800 pb-2 gap-2 text-xs font-semibold">
+              <button
+                onClick={() => setActiveTab('review')}
+                className={`flex-1 py-1.5 rounded-lg flex items-center justify-center gap-1.5 transition-colors ${
+                  activeTab === 'review' ? 'bg-chess-accent text-white' : 'bg-[#1e2024] text-gray-400'
+                }`}
+              >
+                <LayoutDashboard className="w-3.5 h-3.5" />
+                <span>Board & Engine</span>
+              </button>
+              <button
+                onClick={() => setActiveTab('report')}
+                className={`flex-1 py-1.5 rounded-lg flex items-center justify-center gap-1.5 transition-colors ${
+                  activeTab === 'report' ? 'bg-chess-accent text-white' : 'bg-[#1e2024] text-gray-400'
+                }`}
+              >
             <BarChart2 className="w-3.5 h-3.5" />
             <span>Accuracy & Moves</span>
           </button>
@@ -860,7 +874,9 @@ export const App: React.FC = () => {
             )}
           </div>
         </div>
-      </main>
+      </>
+    )}
+  </main>
 
       {/* Floating Analysis Progress Banner */}
       {isAnalyzing && progress && (

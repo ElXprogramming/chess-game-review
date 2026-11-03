@@ -1,7 +1,9 @@
 import React from 'react';
-import { Volume2, VolumeX, RotateCw, PlusCircle, Download, Palette, Cpu, FilePlus } from 'lucide-react';
+import { Volume2, VolumeX, RotateCw, PlusCircle, Download, Palette, Cpu, FilePlus, Sparkles, LayoutDashboard } from 'lucide-react';
 
 interface NavbarProps {
+  activeMode: 'review' | 'puzzles';
+  onSelectMode: (mode: 'review' | 'puzzles') => void;
   onOpenPgnModal: () => void;
   onFlipBoard: () => void;
   soundEnabled: boolean;
@@ -14,6 +16,8 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
+  activeMode,
+  onSelectMode,
   onOpenPgnModal,
   onFlipBoard,
   soundEnabled,
@@ -25,11 +29,11 @@ export const Navbar: React.FC<NavbarProps> = ({
   hasGame,
 }) => {
   return (
-    <header className="sticky top-0 z-40 bg-[#16171a]/95 backdrop-blur-md border-b border-gray-800/80 px-4 sm:px-6 py-3">
-      <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+    <header className="sticky top-0 z-40 bg-[#16171a]/95 backdrop-blur-md border-b border-gray-800/80 px-4 sm:px-6 py-2.5">
+      <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
         {/* Logo and Engine Tag */}
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-chess-accent to-emerald-400 flex items-center justify-center text-white shadow-lg shadow-chess-accent/20">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-chess-accent to-emerald-400 flex items-center justify-center text-white shadow-lg shadow-chess-accent/20 shrink-0">
             <svg
               className="w-5 h-5 fill-current"
               viewBox="0 0 24 24"
@@ -43,16 +47,46 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span className="font-extrabold text-white text-base tracking-tight">
                 ChessGameReview
               </span>
-              <span className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+              <span className="hidden md:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
                 <Cpu className="w-3 h-3" />
                 Stockfish Live
               </span>
             </div>
-            <p className="text-[11px] text-gray-400 hidden sm:block">
-              Interactive Board, Live Engine Analysis & Game Review
+            <p className="text-[11px] text-gray-400 hidden lg:block">
+              Interactive Board, Live Engine Analysis & Puzzles
             </p>
           </div>
+        </div>
+
+        {/* Center: Mode Switcher (Review vs Puzzles) */}
+        <div className="flex items-center p-1 rounded-xl bg-[#202227] border border-gray-800">
+          <button
+            onClick={() => onSelectMode('review')}
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+              activeMode === 'review'
+                ? 'bg-[#2b2e35] text-white shadow-sm shadow-black/30'
+                : 'text-gray-400 hover:text-gray-200'
+            }`}
+          >
+            <LayoutDashboard className="w-3.5 h-3.5" />
+            <span>Game Review</span>
+          </button>
+
+          <button
+            onClick={() => onSelectMode('puzzles')}
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+              activeMode === 'puzzles'
+                ? 'bg-chess-accent text-white shadow-sm shadow-chess-accent/30'
+                : 'text-gray-400 hover:text-gray-200'
+            }`}
+          >
+            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+            <span>Puzzles</span>
+            <span className="hidden sm:inline-block ml-0.5 px-1.5 py-0.2 bg-emerald-500/20 text-emerald-300 text-[9px] font-extrabold rounded-md uppercase tracking-wider">
+              Unlimited
+            </span>
+          </button>
         </div>
 
         {/* Right Action Buttons */}
