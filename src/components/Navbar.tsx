@@ -1,4 +1,5 @@
-import { Volume2, VolumeX, RotateCw, PlusCircle, Download, Palette, Cpu } from 'lucide-react';
+import React from 'react';
+import { Volume2, VolumeX, RotateCw, PlusCircle, Download, Palette, Cpu, FilePlus } from 'lucide-react';
 
 interface NavbarProps {
   onOpenPgnModal: () => void;
@@ -8,6 +9,7 @@ interface NavbarProps {
   boardTheme: 'classic' | 'wood' | 'midnight' | 'charcoal' | 'emerald';
   onChangeTheme: (theme: 'classic' | 'wood' | 'midnight' | 'charcoal' | 'emerald') => void;
   onExportPgn?: () => void;
+  onNewBoard?: () => void;
   hasGame: boolean;
 }
 
@@ -19,6 +21,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   boardTheme,
   onChangeTheme,
   onExportPgn,
+  onNewBoard,
   hasGame,
 }) => {
   return (
@@ -43,17 +46,29 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
                 <Cpu className="w-3 h-3" />
-                Stockfish WASM
+                Stockfish Live
               </span>
             </div>
             <p className="text-[11px] text-gray-400 hidden sm:block">
-              Client-Side Browser Chess Engine & Game Review
+              Interactive Board, Live Engine Analysis & Game Review
             </p>
           </div>
         </div>
 
         {/* Right Action Buttons */}
         <div className="flex items-center gap-2 sm:gap-3">
+          {/* New Board (Free Play / Clear) */}
+          {hasGame && onNewBoard && (
+            <button
+              onClick={onNewBoard}
+              title="Start New Free Play Board"
+              className="hidden sm:flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#202227] hover:bg-[#2b2e35] text-xs font-semibold text-gray-300 hover:text-white transition-colors border border-gray-800"
+            >
+              <FilePlus className="w-3.5 h-3.5 text-gray-400" />
+              <span>New Board</span>
+            </button>
+          )}
+
           {/* Flip Board */}
           <button
             onClick={onFlipBoard}
