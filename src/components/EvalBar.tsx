@@ -8,106 +8,91 @@ interface EvalBarProps {
 }
 
 export const EvalBar: React.FC<EvalBarProps> = ({ score, orientation = 'white' }) => {
+  // Safe fallback if score is missing or invalid
   const safeScore: EvalScore =
     score && typeof score.value === 'number' && !isNaN(score.value)
       ? score
       : { type: 'cp', value: 0, winProb: 50 };
 
-  // Height percentage of white portion (0 to 100)
-  let whitePercent = evalToWinProb(safeScore);
-  if (safeScore.type === 'mate') {
-    whitePercent = safeScore.value > 0 ? 100 : safeScore.value < 0 ? 0 : 50;
-  }
-  whitePercent = Math.max(0, Math.min(100, whitePercent));
+  // Calculate Win Probability (0.0 to 100.0) from White's perspective
+  // Using standard sigmoid win probability formula from capsCalculator
+  const winProb = evalToWinProb(safeScore);
+  const clampedWhitePercent = Math.max(0, Math.min(100, winProb));
 
-  // Determine winning state
-  const isWhiteWinning =
-    safeScore.type === 'mate' ? safeScore.value > 0 : safeScore.value > 5;
-  const isBlackWinning =
-    safeScore.type === 'mate' ? safeScore.value < 0 : safeScore.value < -5;
-  const isEqual = !isWhiteWinning && !isBlackWinning;
+  // Format label text and determine advantage
+  const isMate = safeScore.type === 'mate';
+  const val = isMate ? safeScore.value : safeScore.value / 100;
 
-  // Format label text
   let label = '0.0';
-  if (safeScore.type === 'mate') {
-    const mateVal = Math.abs(safeScore.value);
-    label = safeScore.value > 0 ? `+M${mateVal}` : `-M${mateVal}`;
+  let isWhiteAhead = false;
+  let isBlackAhead = false;
+
+  if (isMate) {
+    label = `M${Math.abs(safeScore.value)}`;
+    isWhiteAhead = safeScore.value > 0;
+    isBlackAhead = safeScore.value < 0;
   } else {
-    const val = safeScore.value / 100;
-    if (Math.abs(val) < 0.05) {
+    const absVal = Math.abs(val);
+    if (absVal < 0.05) {
       label = '0.0';
     } else {
-      const formatted = Math.abs(val).toFixed(1);
-      label = val > 0 ? `+${formatted}` : `-${formatted}`;
+      label = absVal.toFixed(1);
+      if (val > 0) {
+        label = `+${label}`;
+        isWhiteAhead = true;
+      } else {
+        label = `-${label}`;
+        isBlackAhead = true;
+      }
     }
   }
 
-  // Top and bottom section configuration based on orientation:
-  // When orientation === 'white': Black is on top, White is on bottom
-  // When orientation === 'black': White is on top, Black is on bottom
-  const isWhiteOnBottom = orientation === 'white';
+  // Label placement:
+  // - White ahead: placed on White's portion (bottom if orientation='white', top if orientation='black')
+  // - Black ahead: placed on Black's portion (top if orientation='white', bottom if orientation='black')
+  // - Equal (0.0): placed on player's side (bottom)
+  const showAtBottom = isWhiteAhead
+    ? orientation === 'white'
+    : isBlackAhead
+    ? orientation === 'black'
+    : true;
 
-  const topColor = isWhiteOnBottom ? 'black' : 'white';
-  const bottomColor = isWhiteOnBottom ? 'white' : 'black';
-
-  const topPercent = isWhiteOnBottom ? 100 - whitePercent : whitePercent;
-  const bottomPercent = 100 - topPercent;
-
-  // Which section should render the score label?
-  // The label belongs to whichever side is winning.
-  // When exactly equal (0.0), render on the player's side (bottom).
-  const showTopLabel = isWhiteOnBottom ? isBlackWinning : isWhiteWinning;
-  const showBottomLabel = isWhiteOnBottom
-    ? isWhiteWinning || isEqual
-    : isBlackWinning || isEqual;
+  // Whether the label sits on White's background (needs dark text) or Black's (needs light text)
+  const sitsOnWhite = showAtBottom ? orientation === 'white' : orientation === 'black';
 
   return (
     <div
-      title={`Evaluation: ${label} (${orientation === 'white' ? 'White POV' : 'Black POV'})`}
-      className="relative w-8 md:w-9 h-full min-h-[400px] bg-[#16171a] rounded-lg overflow-hidden border border-gray-800 shadow-inner flex flex-col justify-between select-none"
+      className="relative w-8 sm:w-9 self-stretch bg-[#27282d] rounded-lg overflow-hidden border border-gray-800 shadow-inner select-none flex-shrink-0"
+      title={`Evaluation: ${label} (${clampedWhitePercent.toFixed(1)}% White advantage)`}
+      aria-label={`Evaluation: ${label}`}
     >
-      {/* Top share */}
+      {/* White's share of the bar (fills from bottom for white orientation, top for black orientation) */}
       <div
-        className={`w-full transition-all duration-300 ease-out flex items-start justify-center ${
-          topColor === 'white' ? 'bg-[#f0f0f0]' : 'bg-[#27282d]'
+        className={`absolute left-0 right-0 bg-[#f0f0f0] transition-all duration-300 ease-out ${
+          orientation === 'white' ? 'bottom-0' : 'top-0'
         }`}
-        style={{ height: `${topPercent}%` }}
-      >
-        {showTopLabel && (
-          <span
-            className={`mt-2 text-[11px] font-mono font-bold px-1 py-0.5 rounded shadow-sm ${
-              topColor === 'white'
-                ? 'text-gray-900 bg-white/80 border border-black/10'
-                : 'text-gray-200 bg-black/60 border border-white/10'
-            }`}
-          >
-            {label}
-          </span>
-        )}
-      </div>
-
-      {/* Bottom share */}
-      <div
-        className={`w-full transition-all duration-300 ease-out flex items-end justify-center ${
-          bottomColor === 'white' ? 'bg-[#f0f0f0]' : 'bg-[#27282d]'
-        }`}
-        style={{ height: `${bottomPercent}%` }}
-      >
-        {showBottomLabel && (
-          <span
-            className={`mb-2 text-[11px] font-mono font-bold px-1 py-0.5 rounded shadow-sm ${
-              bottomColor === 'white'
-                ? 'text-gray-900 bg-white/80 border border-black/10'
-                : 'text-gray-200 bg-black/60 border border-white/10'
-            }`}
-          >
-            {label}
-          </span>
-        )}
-      </div>
+        style={{ height: `${clampedWhitePercent}%` }}
+      />
 
       {/* Center 0.0 tick line */}
       <div className="absolute top-1/2 left-0 right-0 h-[1px] bg-gray-500/40 -translate-y-1/2 pointer-events-none z-10" />
+
+      {/* Score Badge */}
+      <div
+        className={`absolute left-0 right-0 flex justify-center z-20 pointer-events-none transition-all duration-300 ${
+          showAtBottom ? 'bottom-1.5' : 'top-1.5'
+        }`}
+      >
+        <span
+          className={`text-[10px] sm:text-[11px] font-bold px-1 py-0.5 rounded shadow-sm tracking-tight ${
+            sitsOnWhite
+              ? 'text-gray-900 bg-white/85'
+              : 'text-gray-100 bg-black/60'
+          }`}
+        >
+          {label}
+        </span>
+      </div>
     </div>
   );
 };
