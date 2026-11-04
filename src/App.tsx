@@ -181,14 +181,37 @@ export const App: React.FC = () => {
 
   // Live evaluation score for the EvalBar
   const currentEval: EvalScore = useMemo(() => {
-    if (liveEngineEnabled && liveEngineState?.score) {
+    // 1. In review mode (and not exploring a custom variation):
+    // Prioritize the move's precomputed review evaluation so it updates instantly and accurately
+    if (review && !isExploringVariation) {
+      if (currentMoveIndex >= 0 && currentReview?.evalAfter) {
+        return currentReview.evalAfter;
+      }
+      if (currentMoveIndex === -1 && review.moves.length > 0) {
+        return review.moves[0].evalBefore || { type: 'cp', value: 0, winProb: 50 };
+      }
+    }
+
+    // 2. In sandbox, variation exploration, or when live engine matches current board FEN:
+    if (liveEngineEnabled && liveEngineState?.score && liveEngineState.fen === currentFen) {
       return liveEngineState.score;
     }
+
+    // 3. Fallback to review eval if present
     if (currentReview?.evalAfter) {
       return currentReview.evalAfter;
     }
+
     return { type: 'cp', value: 0, winProb: 50 };
-  }, [liveEngineEnabled, liveEngineState, currentReview]);
+  }, [
+    review,
+    isExploringVariation,
+    currentMoveIndex,
+    currentReview,
+    liveEngineEnabled,
+    liveEngineState,
+    currentFen,
+  ]);
 
   // Start live engine evaluation when board FEN changes
   useEffect(() => {

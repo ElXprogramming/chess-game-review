@@ -436,7 +436,7 @@ export const PuzzleGeneratorView: React.FC<PuzzleGeneratorViewProps> = ({
             {/* Live Eval Bar (only active when engine is on or puzzle is solved) */}
             <EvalBar
               score={
-                isEngineOpen && liveEngineState?.score
+                isEngineOpen && liveEngineState?.score && liveEngineState.fen === currentFen
                   ? liveEngineState.score
                   : { type: 'cp', value: 0, winProb: 50 }
               }
