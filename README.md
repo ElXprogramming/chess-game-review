@@ -1,10 +1,14 @@
 # ChessGameReview ♟️⚡
 ### The Ultimate In-Browser Chess Engine & Game Review Web Application
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-chessgamereview--two.vercel.app-10b981?style=flat-square&logo=vercel&logoColor=white)](https://chessgamereview-two.vercel.app)
+[![Latest Release](https://img.shields.io/github/v/release/ElXprogramming/chess-game-review?color=blue)](https://github.com/ElXprogramming/chess-game-review/releases)
+[![CI](https://github.com/ElXprogramming/chess-game-review/actions/workflows/ci.yml/badge.svg)](https://github.com/ElXprogramming/chess-game-review/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](LICENSE)
 [![Engine: Stockfish WASM](https://img.shields.io/badge/Engine-Stockfish%20WASM%2016-81b64c.svg)](https://stockfishchess.org/)
 [![CAPS2: Accuracy Engine](https://img.shields.io/badge/Accuracy-CAPS2%20Model-blue.svg)](#)
 [![Client-Side: 100% Zero-Server](https://img.shields.io/badge/Privacy-100%25%20In--Browser-purple.svg)](#)
+[![GitHub Stars](https://img.shields.io/github/stars/ElXprogramming/chess-game-review?style=social)](https://github.com/ElXprogramming/chess-game-review/stargazers)
 
 **ChessGameReview** is a high-performance, browser-native chess engine and full game review web application. It runs **Stockfish (WebAssembly / asm.js)** directly inside browser Web Workers with zero server dependencies, evaluating any PGN (Portable Game Notation) game in seconds, calculating **CAPS2 accuracy percentages**, classifying every move with badges, providing natural language virtual coach commentary, and displaying an interactive evaluation advantage chart.
 
@@ -121,6 +125,12 @@ The optimized static build will be placed in `dist/`, ready for deployment to Gi
 - **Icons**: [Lucide React](https://lucide.dev/)
 - **Animations**: [canvas-confetti](https://www.npmjs.com/package/canvas-confetti)
 - **Audio**: Web Audio API procedural synthesis
+
+---
+
+## 🤝 Contributing & Security
+
+Contributions, tactical puzzle improvements, and bug reports are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md), our [Code of Conduct](CODE_OF_CONDUCT.md), and [SECURITY.md](SECURITY.md).
 
 ---
 

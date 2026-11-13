@@ -2,6 +2,23 @@
   "name": "chess-game-review",
   "private": true,
   "version": "1.0.0",
+  "description": "In-browser Stockfish 16 WASM chess game review and tactical puzzle analyzer with CAPS2 accuracy scoring, move classifications, coach insights, and interactive evaluation charts.",
+  "homepage": "https://chessgamereview-two.vercel.app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ElXprogramming/chess-game-review.git"
+  },
+  "keywords": [
+    "chess",
+    "stockfish",
+    "webassembly",
+    "chess-analysis",
+    "game-review",
+    "pgn",
+    "chess-puzzles",
+    "react",
+    "typescript"
+  ],
   "type": "module",
   "scripts": {
     "dev": "vite",
